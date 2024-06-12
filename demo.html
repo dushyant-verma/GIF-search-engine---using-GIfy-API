@@ -1,0 +1,49 @@
+<script>
+
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+    const gifContainer = document.getElementById('gifContainer');
+    const apiKey = 'YOUR_GIPHY_API_KEY'; // Replace with your Giphy API key
+
+    // Function to fetch and display GIFs
+    async function fetchGifs(query) {
+        try {
+            const response = await fetch(`https://api.giphy.com/v1/gifs/search?api_key=${apiKey}&q=${query}&limit=12`);
+            const data = await response.json();
+            displayGifs(data.data);
+        } catch (error) {
+            console.error('Error fetching GIFs:', error);
+        }
+    }
+
+    // Function to display GIFs
+    function displayGifs(gifs) {
+        gifContainer.innerHTML = '';
+        gifs.forEach(gif => {
+            const img = document.createElement('img');
+            img.src = gif.images.fixed_height.url;
+            gifContainer.appendChild(img);
+        });
+    }
+
+    // Event listener for the search button
+    searchBtn.addEventListener('click', function() {
+        const query = searchInput.value.trim();
+        if (query !== '') {
+            fetchGifs(query);
+        }
+    });
+
+    // Event listener for the Enter key
+    searchInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            const query = searchInput.value.trim();
+            if (query !== '') {
+                fetchGifs(query);
+            }
+        }
+    });
+});
+
+</script>
